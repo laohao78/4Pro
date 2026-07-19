@@ -1,0 +1,11 @@
+<launch>
+
+  <!-- 启动底盘通讯-->
+  <node pkg="chasis_control" type="ROSPY_Orin_chasis_control_202406v1.py" name="Chasis_Control" required = "true" />
+
+  <!--启动键盘控制-->
+  <node pkg="chasis_control" type="ROSPY_NX_KeyboardControl_20230601.py" name="Keyboard_Control" output ="screen" required = "true" >
+  </node> 
+
+  
+</launch>

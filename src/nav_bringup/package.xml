@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <name>nav_bringup</name>
+  <version>0.0.0</version>
+  <description>导航启动包：TF 转发 + 静态变换</description>
+  <maintainer email="orin@example.com">orin</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>tf2_ros</build_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>tf2_ros</run_depend>
+  <run_depend>livox_ros_driver2</run_depend>
+  <run_depend>fast_lio</run_depend>
+</package>

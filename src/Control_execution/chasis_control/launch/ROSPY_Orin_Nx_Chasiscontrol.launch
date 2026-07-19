@@ -1,0 +1,6 @@
+<launch>
+
+  <!-- 启动底盘通讯-->
+  <node pkg="chasis_control" type="ROSPY_Orin_chasis_control_202406v1.py" name="Chasis_Control" required = "true" output="screen" />
+  
+</launch>

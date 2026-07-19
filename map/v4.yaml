@@ -1,0 +1,6 @@
+image: v4.pgm
+resolution: 0.02
+origin: [-1.06774, -0.571447, 0.0]
+negate: 0
+occupied_thresh: 0.45
+free_thresh: 0.2

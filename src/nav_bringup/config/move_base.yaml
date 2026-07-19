@@ -1,0 +1,25 @@
+# move_base 框架参数
+controller_frequency: 10.0
+controller_patience: 3.0
+planner_frequency: 1.0
+planner_patience: 5.0
+oscillation_timeout: 10.0
+oscillation_distance: 0.5
+
+# 全局规划器: navfn (Dijkstra, 窄路更稳)
+base_global_planner: navfn/NavfnROS
+NavfnROS:
+  allow_unknown: false
+  default_tolerance: 0.1
+
+# 局部规划器
+base_local_planner: teb_local_planner/TebLocalPlannerROS
+
+# 恢复行为
+recovery_behaviors:
+  - name: conservative_reset
+    type: clear_costmap_recovery/ClearCostmapRecovery
+  - name: rotate_recovery
+    type: rotate_recovery/RotateRecovery
+  - name: aggressive_reset
+    type: clear_costmap_recovery/ClearCostmapRecovery

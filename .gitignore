@@ -1,0 +1,9 @@
+build/
+devel/
+*.pyc
+__pycache__/
+.ros/
+*.log
+PCD/
+logs/
+.DS_Store

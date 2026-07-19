@@ -1,0 +1,8 @@
+<launch>
+<!-- 控制链测试 -->
+
+    <node pkg="chasis_control" type="ROSPY_Orin_chasis_control_202406v1.py" name="Chasis_Control" required="true"/>
+    <node pkg="nav_bringup" type="cmd_vel_to_ackermann.py" name="cmd_vel_converter" output="screen"/>
+    <node pkg="nav_bringup" type="test_control_chain.py" name="test_control" output="screen"/>
+
+</launch>

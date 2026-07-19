@@ -1,0 +1,30 @@
+# 代价地图公共参数
+# 坐标系
+global_frame: map
+robot_base_frame: base_footprint
+transform_tolerance: 0.5
+
+# 地图
+map_topic: /map
+
+# 障碍物层 (来自 /scan)
+obstacle_layer:
+  enabled: true
+  observation_sources: scan
+  scan:
+    data_type: LaserScan
+    topic: /scan
+    marking: true
+    clearing: true
+    obstacle_range: 5.0
+    raytrace_range: 6.0
+
+# 膨胀层 (最小安全距离)
+inflation_layer:
+  enabled: true
+  inflation_radius: 0.06
+  cost_scaling_factor: 10.0
+
+# 机器人尺寸 (窄路极限)
+robot_radius: 0.06
+footprint: [[-0.10, -0.08], [0.10, -0.08], [0.10, 0.08], [-0.10, 0.08]]

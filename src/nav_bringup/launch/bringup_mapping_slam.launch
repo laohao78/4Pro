@@ -1,0 +1,42 @@
+<launch>
+<!-- 建图模式：雷达 + FAST_LIO + slam_toolbox → .pgm -->
+
+    <arg name="rviz" default="false"/>
+
+    <!-- 雷达驱动 -->
+    <include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch"/>
+
+    <!-- FAST_LIO 里程计 -->
+    <include file="$(find fast_lio)/launch/mapping_mid360.launch">
+        <arg name="rviz" value="$(arg rviz)"/>
+    </include>
+
+    <!-- TF 静态偏移 (FAST_LIO 源码已改为直接发 odom→base_link) -->
+    <node pkg="tf" type="static_transform_publisher" name="tf_base_to_livox"
+          args="-0.13 0 0.15 0 0 0 base_link livox_frame 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="tf_base_to_footprint"
+          args="0 0 -0.03 0 0 0 base_link base_footprint 100"/>
+
+    <!-- PointCloud2 → /scan (用 FAST_LIO 的 body 系输出) -->
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pcd_to_scan">
+        <remap from="cloud_in" to="/cloud_registered_body"/>
+        <remap from="scan" to="/scan"/>
+        <param name="target_frame" value="livox_frame"/>
+        <param name="transform_tolerance" value="0.01"/>
+        <param name="min_height" value="-0.05"/>
+        <param name="max_height" value="0.06"/>
+        <param name="angle_min" value="-3.14159"/>
+        <param name="angle_max" value="3.13723"/>
+        <param name="angle_increment" value="0.0043633"/>
+        <param name="scan_time" value="0.1"/>
+        <param name="range_min" value="0.3"/>
+        <param name="range_max" value="20.0"/>
+        <param name="use_inf" value="true"/>
+    </node>
+
+    <!-- slam_toolbox 栅格建图 -->
+    <node pkg="slam_toolbox" type="async_slam_toolbox_node" name="slam_toolbox" output="screen">
+        <rosparam command="load" file="$(find nav_bringup)/config/slam_toolbox_mapping.yaml"/>
+    </node>
+
+</launch>
