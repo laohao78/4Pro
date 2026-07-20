@@ -65,8 +65,9 @@ SLAM 模式 costmap 用 `global_frame: odom`（避免启动时 map 帧未就绪�
 
 | Launch | 用途 |
 |--------|------|
-| `bringup_mapping.launch` | 纯建图（雷达 + FAST_LIO + TF） |
-| `bringup_mapping_slam.launch` | 建图 + slam_toolbox |
-| `bringup_slam_nav.launch` | **边建图边导航**（全链路） |
-| `bringup_nav.launch` | 静态地图导航（AMCL + map_server） |
+| `fastlio_mapping.launch` | 纯建图（雷达 + FAST_LIO + TF） |
+| `fastlio_slamtoolbox_mapping.launch` | 建图 + slam_toolbox |
+| `fastlio_slamtoolbox_mapping_nav.launch` | **边建图边导航**（全链路） |
+| `fastlio_amcl_nav.launch` | 静态地图导航（AMCL + map_server） |
 | `test_control.launch` | 底盘控制链测试 |
+| `fastlio_ndt_nav.launch` | NDT 定位导航 (TODO) |

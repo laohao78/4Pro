@@ -17,10 +17,10 @@ nav_bringup/
 │   ├── slam_toolbox_mapping.yaml     # slam_toolbox 建图参数
 │   └── teb_local_planner.yaml        # TEB 轻量配置 (Jetson)
 ├── launch/
-│   ├── bringup_mapping.launch        # 纯建图: 雷达 + FAST_LIO + TF
-│   ├── bringup_mapping_slam.launch   # 建图: + slam_toolbox
-│   ├── bringup_slam_nav.launch       # 边建图边导航 (全链路)
-│   ├── bringup_nav.launch            # 静态地图导航 (map_server + AMCL)
+│   ├── fastlio_mapping.launch        # 纯建图: 雷达 + FAST_LIO + TF
+│   ├── fastlio_slamtoolbox_mapping.launch   # 建图: + slam_toolbox
+│   ├── fastlio_slamtoolbox_mapping_nav.launch       # 边建图边导航 (全链路)
+│   ├── fastlio_amcl_nav.launch            # 静态地图导航 (map_server + AMCL)
 │   └── test_control.launch           # 底盘控制链测试
 ├── rviz/
 │   └── nav.rviz                      # 导航 RViz 配置
@@ -34,20 +34,24 @@ nav_bringup/
 
 | 文件 | 用途 | 包含 |
 |------|------|------|
-| `bringup_mapping.launch` | 纯建图 | 雷达 + FAST_LIO + TF |
-| `bringup_mapping_slam.launch` | 建栅格 | + pointcloud_to_laserscan + slam_toolbox |
-| `bringup_slam_nav.launch` | **边建图边导航** | 上面 + TEB + move_base + 底盘控制 |
-| `bringup_nav.launch` | 静态地图导航 | + map_server + AMCL |
+| `fastlio_mapping.launch` | 纯建图 | 雷达 + FAST_LIO + TF |
+| `fastlio_slamtoolbox_mapping.launch` | 建栅格 | + pointcloud_to_laserscan + slam_toolbox |
+| `fastlio_slamtoolbox_mapping_nav.launch` | **边建图边导航** | 上面 + TEB + move_base + 底盘控制 |
+| `fastlio_amcl_nav.launch` | 静态地图导航 | + map_server + AMCL |
 | `test_control.launch` | 底盘测试 | chassis_control + converter + test_control |
 
 ## TF 架构
 
-FAST_LIO 源码已改为直接发 `odom → base_link`。
+FAST_LIO 源码已改为直接发 `odom → livox_frame`。
 
 ```
-map ──(slam_toolbox)──▶ odom ──(FAST_LIO)──▶ base_link
-                                                ├── livox_frame
-                                                └── base_footprint
+map ──(slam_toolbox)──▶ odom ──(FAST_LIO)──▶ livox_frame
+                                                 │  (+0.13, 0, -0.15)
+                                                 ▼
+                                            base_link
+                                                 │  (0, 0, -0.03)
+                                                 ▼
+                                            base_footprint
 ```
 
 ## cmd_vel → 底盘控制
