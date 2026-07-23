@@ -4,7 +4,7 @@
 
 | 组件 | 信息 |
 |------|------|
-| 平台 | Jetson Xavier NX / aarch64 |
+| 平台 | Jetson Orin NX / aarch64 |
 | ROS | Noetic (Ubuntu 20.04) |
 | LiDAR | Livox Mid360 |
 | 驱动 | livox_ros_driver2 |
@@ -17,7 +17,7 @@
 | 修改 | 文件 | 说明 |
 |------|------|------|
 | `camera_init` → `odom` | `laserMapping.cpp` | 让 FAST_LIO 直接发导航标准 TF 名 |
-| `body` → `base_link` | `laserMapping.cpp` | 同上 |
+| `body` → `livox_frame` | `laserMapping.cpp` | 同上 |
 | `livox_ros_driver` → `livox_ros_driver2` | `CMakeLists.txt`, `package.xml`, `*.cpp`, `*.h` | 适配新驱动 |
 | `path_en: true` | `config/mid360.yaml` | 开启轨迹话题 |
 
@@ -93,17 +93,17 @@ CustomMsg 是驱动→FAST_LIO 内部格式，Foxglove 看 LIO 输出的 PointCl
 ### /Odometry 详解
 
 ```cpp
-odomAftMapped.header.frame_id = "odom";       // world 系
-odomAftMapped.child_frame_id  = "base_link";   // 机器人本体
+odomAftMapped.header.frame_id = "odom";          // world 系
+odomAftMapped.child_frame_id  = "livox_frame";   // LiDAR/IMU 本体
 // 位置 + 姿态 + 6x6 协方差
 // twist 字段为空（不输出速度）
-// 同时发 TF: odom → base_link
+// 同时发 TF: odom → livox_frame
 ```
 
 | 属性 | 值 |
 |------|-----|
 | `header.frame_id` | `odom` |
-| `child_frame_id` | `base_link` |
+| `child_frame_id` | `livox_frame` |
 | `pose.pose` | 位置 + 姿态 |
 | `twist` | 空（导航需另外获取速度） |
 

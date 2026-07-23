@@ -1,19 +1,67 @@
-# 1.Livox-MID360 环境配置
+# 4Pro小车 SLAM算法实战
 
-# 2.RealSense_d435i 环境配置
+Jetson Orin NX + Ubuntu 20.04 + ROS1 Noetic，前轮转向 Ackermann 车辆，Livox Mid360 雷达 + RealSense D435i。
 
-# 3.FAST-LIO 环境配置
+## 文档结构
 
-# 4.导航依赖
+```
+FAST_LIO/
+├── README.md          ← 你在这里（入口）
+├── mainuse.md         ← 所有 launch 命令
+├── md/
+│   ├── 导航搭建流程.md
+│   ├── mid360.md
+│   ├── d435i.md
+│   ├── fast-lio.md
+│   ├── TF架构.md
+│   ├── SLAM.md
+│   ├── 全局与局部规划器.md
+│   ├── 怎么得到栅格地图.md
+│   └── 导航踩坑记录.md
+└── src/localization/
+    ├── ORB_SLAM3/mainuse.md
+    └── VINS-Fusion/mainuse.md
+```
 
-- **move-base** — 核心导航框架
-- **map-server** — 加载/保存 2D 栅格地图 (.pgm + .yaml)
-- **global-planner** — A*/Dijkstra 全局路径规划
-- **teb-local-planner** — TEB 局部轨迹优化
-- **pointcloud-to-laserscan** — Mid360 PointCloud2 转 2D /scan
-- **pcl-ros** — PCL 点云库 ROS 桥接
-- **costmap-2d** — 2D 代价地图
-- **slam-toolbox** — 在线栅格建图
+## 文档导航
+
+### 快速开始
+
+| 文件 | 内容 |
+|------|------|
+| [mainuse.md](mainuse.md) | 所有 launch 命令快速参考 |
+| [md/导航搭建流程.md](md/导航搭建流程.md) | 从零搭建导航的完整步骤 |
+
+### FAST-LIO / 导航
+
+| 文件 | 内容 |
+|------|------|
+| [md/mid360.md](md/mid360.md) | Livox MID360 雷达驱动配置 |
+| [md/fast-lio.md](md/fast-lio.md) | FAST-LIO 原理、参数、TF 改动 |
+| [md/TF架构.md](md/TF架构.md) | odom→livox_frame→base_link→base_footprint |
+| [md/SLAM.md](md/SLAM.md) | SLAM 方案对比表 |
+| [md/全局与局部规划器.md](md/全局与局部规划器.md) | TEB / DWA 原理与配置 |
+| [md/怎么得到栅格地图.md](md/怎么得到栅格地图.md) | PCD 离线转 PGM |
+| [md/d435i.md](md/d435i.md) | RealSense D435i 硬件与视觉 SLAM 调用方式 |
+| [md/导航踩坑记录.md](md/导航踩坑记录.md) | 导航调试中遇到的问题与解决 |
+
+### 视觉 SLAM
+
+| 文件 | 内容 |
+|------|------|
+| [src/localization/ORB_SLAM3/mainuse.md](src/localization/ORB_SLAM3/mainuse.md) | 编译、YAML 配置、地图保存/加载、已修复 bug |
+| [src/localization/VINS-Fusion/mainuse.md](src/localization/VINS-Fusion/mainuse.md) | OpenCV 兼容、IMU 标定、回环、外参读取 |
+
+## 硬件
+
+| 组件 | 型号 |
+|------|------|
+| 计算平台 | Jetson Orin NX |
+| 雷达 | Livox Mid360 |
+| 相机 | Intel RealSense D435i |
+| 底盘 | 前轮转向 Ackermann |
+
+## 核心依赖
 
 ```sh
 sudo apt install ros-noetic-move-base ros-noetic-map-server ros-noetic-global-planner \
@@ -21,53 +69,26 @@ sudo apt install ros-noetic-move-base ros-noetic-map-server ros-noetic-global-pl
   ros-noetic-pcl-ros ros-noetic-costmap-2d ros-noetic-slam-toolbox ros-noetic-amcl
 ```
 
-# 5.TF 树搭建
-
-## 实车测量
-
-雷达偏移 (base_link → livox_frame)：(-13cm, 0, 15cm)，无旋转
-底盘投影 (base_link → base_footprint)：(0, 0, -3cm)，无旋转
+导航从零搭建的完整流程见 [md/导航搭建流程.md](md/导航搭建流程.md)。
 
 ## TF 架构
 
-FAST_LIO 源码已改（`camera_init` → `odom`, `body` → `base_link`），直接输出标准 TF。
-
 ```
-map ──(slam/定位)──▶ odom ──(FAST_LIO)──▶ base_link
-                                            ├── livox_frame      x=-0.13 y=0 z=0.15
-                                            └── base_footprint   x=0 y=0 z=-0.03
+map ──(slam/定位)──▶ odom ──(FAST_LIO)──▶ livox_frame
+                                               │  (+0.13, 0, -0.15)
+                                               ▼
+                                          base_link
+                                               │  (0, 0, -0.03)
+                                               ▼
+                                          base_footprint
 ```
 
-`src/nav_bringup/` — 导航启动包。TF 放在各 launch 里（`tf_base_to_livox` + `tf_base_to_footprint`）。
+静态 TF 已在各 launch 中通过 `static_transform_publisher` 定义。FAST_LIO 源码已改为直接输出 `odom → livox_frame`。
 
-# 6.栅格地图生成
+## SLAM 方案
 
-PCD 离线转栅格，见 [怎么得到栅格地图](md/怎么得到栅格地图.md)。最佳参数 `z=-0.08 ~ 0.08`（雷达系，z=0 = 雷达高度 ≈ 18cm 离地）。
-
-# 7.定位
-
-边建图边导航模式：slam_toolbox 同时出 /map + map→odom TF，不需要单独的 AMCL。
-静态地图模式：map_server + AMCL（TODO）。
-
-# 8.move_base + TEB
-
-TEB 差速模式（`cmd_angle_instead_rotvel: false`），`max_samples: 100` 适配 Jetson。
-配置：[teb_local_planner.yaml](src/nav_bringup/config/teb_local_planner.yaml)
-SLAM 模式 costmap 用 `global_frame: odom`（避免启动时 map 帧未就绪）。
-
-# 9.cmd_vel → 底盘控制
-
-`cmd_vel_to_ackermann.py`：速度线性映射为占空比，ω 映射为舵机 position。四轮异向模式。
-- `/motor_write_duty` (Float64)
-- `/servo_write_position` (Int32, 1500=中位)
-
-# 10.launch 文件
-
-| Launch | 用途 |
-|--------|------|
-| `fastlio_mapping.launch` | 纯建图（雷达 + FAST_LIO + TF） |
-| `fastlio_slamtoolbox_nav.launch` | slam_toolbox 已知地图导航 |
-| `fastlio_slamtoolbox_mapping_nav.launch` | **边建图边导航**（全链路） |
-| `fastlio_amcl_nav.launch` | 静态地图导航（AMCL + map_server） |
-| `test_control.launch` | 底盘控制链测试 |
-| `fastlio_ndt_nav.launch` | NDT 定位导航 (TODO) |
+| 方案 | 类型 | 状态 |
+|------|------|:----:|
+| **FAST-LIO** | LiDAR+IMU 紧耦合 | ✅ 主力 |
+| **ORB-SLAM3** | 视觉+IMU，ORB 特征 | ✅ 已跑通 |
+| **VINS-Fusion** | 视觉+IMU 紧耦合 + 回环 | ✅ 标定+跑通 |

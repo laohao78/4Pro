@@ -15,9 +15,9 @@
 | **slam_toolbox mapping** | — | ✅ PGM | ✅ | 无 | 当前在用 | 边建图边定 |
 | slam_toolbox localization | — | — | ✅ | .posegraph+.pgm | 需先 mapping | 依赖长 |
 | **视觉** | | | | | | |
-| ORB-SLAM3 | ✅ 视觉 | ✅ KeyFrame+MapPoint (.osa) | ✅ Localization | 稀疏地图 | 已跑通，沙盘效果差 | 保存/加载可用，大场景用 |
+| ORB-SLAM3 | ✅ 视觉+IMU | ✅ KeyFrame+MapPoint (.osa) | ✅ Localization | 稀疏地图 | ✅ 已跑通 | 地图保存/加载正常，Stereo+IMU 可用 |
 | VINS-Mono | ✅ 视觉 | ✅ 位姿图+稀疏点 | — | — | 未集成 | 纯里程计 |
-| VINS-Fusion | ✅ 视觉+GPS | ✅ 位姿图+稀疏点 | ✅ 回环+位姿图 | 位姿图 | 未集成 | VINS 升级版 |
+| VINS-Fusion | ✅ 视觉+IMU | ✅ 位姿图+稀疏点 | ✅ 回环+位姿图 | 位姿图 | ✅ 已集成 | Stereo+IMU，IMU 已标定，外参固件读取，有 launch |
 
 - slam_toolbox 不产生里程计，它依赖外部里程计（如 FAST_LIO）提供 odom→base，再用 /scan 修正 map→odom
 - ORB_SLAM3 稀疏地图 = 几百个 KeyFrame（图像+位姿）+ 几千个 MapPoint（3D 点 + ORB 描述子），大小几十 MB
