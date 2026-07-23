@@ -99,4 +99,5 @@ Viewer.ViewpointF: 500.0
 
 
 # Atlas save/load path
-System.SaveAtlasToFile: "map/my_map"
+# System.LoadAtlasFromFile: "map/0723"
+System.SaveAtlasToFile: "map/last_map"

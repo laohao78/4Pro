@@ -443,6 +443,10 @@ int main(int argc, char **argv) {
         vImuMeas.clear();
     }
     cout << "System shutdown!\n";
+
+    // Give viewer thread time to finish Pangolin Qt cleanup on its own thread
+    // (Shutdown is called from the viewer thread, so we can't join it)
+    usleep(500000);
 }
 
 rs2_vector interpolateMeasure(const double target_time,
