@@ -6,8 +6,6 @@ Panels:
       Expanded:
         - /TF1/Frames1
         - /TF1/Tree1
-        - /Local Plan1
-        - /TEB Poses1
       Splitter Ratio: 0.5
     Tree Height: 466
   - Class: rviz/Selection
@@ -54,11 +52,10 @@ Visualization Manager:
       Tree:
         map:
           odom:
-            base_link:
-              base_footprint:
-                {}
-              livox_frame:
-                {}
+            livox_frame:
+              base_link:
+                base_footprint:
+                  {}
       Update Interval: 0
       Value: true
     - Alpha: 0.699999988079071
@@ -266,7 +263,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 6.068112373352051
+      Distance: 4.648506164550781
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -274,17 +271,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.9715529084205627
-        Y: -0.7870228290557861
-        Z: -0.03418277949094772
+        X: 0.37778663635253906
+        Y: -0.43056216835975647
+        Z: 0.4845450520515442
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.1597963571548462
+      Pitch: 0.999796450138092
       Target Frame: map
-      Yaw: 3.049999475479126
+      Yaw: 4.734999656677246
     Saved: ~
 Window Geometry:
   Displays:

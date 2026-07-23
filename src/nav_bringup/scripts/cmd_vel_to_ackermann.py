@@ -7,8 +7,8 @@ from std_msgs.msg import Float64, Int32
 class CmdVelToAckermann:
     def __init__(self):
         self.max_vel = rospy.get_param("~max_vel", 0.3)
-        self.max_duty = rospy.get_param("~max_duty", 0.20)
-        self.min_duty = rospy.get_param("~min_duty", 0.05)
+        self.max_duty = rospy.get_param("~max_duty", 0.15)
+        self.min_duty = rospy.get_param("~min_duty", 0.06)
         self.max_omega = rospy.get_param("~max_omega", 0.5)
         self.steer_gain = rospy.get_param("~steer_gain", 200)  # 转向增益
         timeout = rospy.get_param("~timeout", 1.0)
@@ -35,11 +35,12 @@ class CmdVelToAckermann:
         position = int(1500 - omega / mo * sg)
         position = max(800, min(2200, position))
 
+        dir = 1 if v >= 0 else -1
         duty = abs(v) / mv * xd
         if v != 0:
             duty += abs(omega) / mo * 0.10
             duty = max(duty, md)
-        duty = min(duty, xd)
+        duty = min(duty, xd) * dir
 
         self.vel_pub.publish(Float64(duty))
         self.steer_pub.publish(Int32(position))

@@ -13,7 +13,7 @@
 
     <!-- TF -->
     <node pkg="tf" type="static_transform_publisher" name="tf_livox_to_base"
-          args="0.13 0 -0.15 0 0 0 base_footprint base_link 100"/>
+          args="0.13 0 -0.15 0 0 0 livox_frame base_link 100"/>
     <node pkg="tf" type="static_transform_publisher" name="tf_base_to_footprint"
           args="0 0 -0.03 0 0 0 base_link base_footprint 100"/>
 
@@ -68,10 +68,10 @@
     <!-- 控制 -->
     <node pkg="nav_bringup" type="cmd_vel_to_ackermann.py" name="cmd_vel_converter" output="screen">
         <param name="max_vel" value="0.3"/>
-        <param name="max_duty" value="0.20"/>
+        <param name="max_duty" value="0.15"/>
         <param name="max_omega" value="3.0"/>
         <param name="steer_gain" value="350"/>
-        <param name="min_duty" value="0.07"/>
+        <param name="min_duty" value="0.06"/>
     </node>
     <node pkg="chasis_control" type="ROSPY_Orin_chasis_control_202406v1.py" name="Chasis_Control" required="true"/>
 

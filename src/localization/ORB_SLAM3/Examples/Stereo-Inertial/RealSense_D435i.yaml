@@ -5,13 +5,29 @@
 #--------------------------------------------------------------------------------------------
 File.version: "1.0"
 
-Camera.type: "Rectified"
+Camera.type: "PinHole"
 
 # Rectified Camera calibration (OpenCV)
 Camera1.fx: 382.613
 Camera1.fy: 382.613
 Camera1.cx: 320.183
 Camera1.cy: 236.455
+
+# Right camera
+Camera2.fx: 382.613
+Camera2.fy: 382.613
+Camera2.cx: 320.183
+Camera2.cy: 236.455
+
+# Stereo baseline times fx (50mm baseline)
+Camera.bf: 19.13
+
+# Stereo extrinsic (left to right, 50mm baseline)
+Stereo.T_c1_c2: !!opencv-matrix
+   rows: 4
+   cols: 4
+   dt: f
+   data: [1,0,0,0.0503, 0,1,0,0, 0,0,1,0, 0,0,0,1]
 
 Stereo.b: 0.0499585
 
@@ -80,3 +96,7 @@ Viewer.ViewpointX: 0.0
 Viewer.ViewpointY: -0.7
 Viewer.ViewpointZ: -3.5
 Viewer.ViewpointF: 500.0
+
+
+# Atlas save/load path
+System.SaveAtlasToFile: "map/my_map"

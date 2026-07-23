@@ -18,7 +18,7 @@ nav_bringup/
 │   └── teb_local_planner.yaml        # TEB 轻量配置 (Jetson)
 ├── launch/
 │   ├── fastlio_mapping.launch        # 纯建图: 雷达 + FAST_LIO + TF
-│   ├── fastlio_slamtoolbox_mapping.launch   # 建图: + slam_toolbox
+│   ├── fastlio_slamtoolbox_nav.launch   # slam_toolbox 已知地图导航
 │   ├── fastlio_slamtoolbox_mapping_nav.launch       # 边建图边导航 (全链路)
 │   ├── fastlio_amcl_nav.launch            # 静态地图导航 (map_server + AMCL)
 │   └── test_control.launch           # 底盘控制链测试
@@ -35,7 +35,7 @@ nav_bringup/
 | 文件 | 用途 | 包含 |
 |------|------|------|
 | `fastlio_mapping.launch` | 纯建图 | 雷达 + FAST_LIO + TF |
-| `fastlio_slamtoolbox_mapping.launch` | 建栅格 | + pointcloud_to_laserscan + slam_toolbox |
+| `fastlio_slamtoolbox_nav.launch` | slam_toolbox 定位导航 |
 | `fastlio_slamtoolbox_mapping_nav.launch` | **边建图边导航** | 上面 + TEB + move_base + 底盘控制 |
 | `fastlio_amcl_nav.launch` | 静态地图导航 | + map_server + AMCL |
 | `test_control.launch` | 底盘测试 | chassis_control + converter + test_control |

@@ -1,24 +1,28 @@
-# TEB 轻量配置 (Jetson)
+# 对齐 pb_rm_simulation: 差速模式 + 加速开关全开
 TebLocalPlannerROS:
 
-  teb_autosize: true
-  dt_ref: 0.8
-  dt_hysteresis: 0.1
-  max_samples: 100
+  teb_autosize: 1.0
+  dt_ref: 0.6
+  dt_hysteresis: 0.06
+  max_samples: 50                       # Jetson 上限
   global_plan_overwrite_orientation: false
   allow_init_with_backwards_motion: true
   max_global_plan_lookahead_dist: 2.0
-  feasibility_check_no_poses: 0
-  exact_arc_length: false
+  feasibility_check_no_poses: 0         # 跳过可行性检查
+  exact_arc_length: false               # 欧氏近似, 省CPU
+  publish_feedback: false               # 不发布反馈
 
   max_vel_x: 0.3
-  max_vel_x_backwards: 0.0
+  max_vel_x_backwards: 0.3
   max_vel_theta: 1.0
-  acc_lim_x: 0.3
+  acc_lim_x: 0.5
   acc_lim_theta: 1.0
 
   min_obstacle_dist: 0.05
   inflation_dist: 0.1
-  include_costmap_obstacles: true
+  include_costmap_obstacles: false      # 关键: 关 costmap 避障, 省CPU
+  costmap_obstacles_behind_robot_dist: 1.0
 
+  xy_goal_tolerance: 0.25
+  yaw_goal_tolerance: 6.28
   cmd_angle_instead_rotvel: false

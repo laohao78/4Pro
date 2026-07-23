@@ -98,6 +98,7 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
         }
     }
 
+
     node = fsSettings["loopClosing"];
     bool activeLC = true;
     if(!node.empty())
@@ -158,8 +159,8 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
 
         if(!isRead)
         {
-            cout << "Error to load the file, please try with other session file or vocabulary file" << endl;
-            exit(-1);
+            cout << "File not found, creating new Atlas..." << endl;
+            mpAtlas = new Atlas(0);
         }
         //mpKeyFrameDatabase = new KeyFrameDatabase(*mpVocabulary);
 
@@ -547,8 +548,10 @@ void System::Shutdown()
 
     if(!mStrSaveAtlasToFile.empty())
     {
-        Verbose::PrintMess("Atlas saving to file " + mStrSaveAtlasToFile, Verbose::VERBOSITY_NORMAL);
+        cout << "Atlas saving to file " + mStrSaveAtlasToFile << endl;
+        cout.flush();
         SaveAtlas(FileType::BINARY_FILE);
+        cout << "Atlas saved." << endl;
     }
 
     /*if(mpViewer)

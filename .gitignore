@@ -7,3 +7,6 @@ __pycache__/
 PCD/
 logs/
 .DS_Store
+
+src/localization/FAST-LIVO2
+src/localization/VINS-Fusion
