@@ -8,6 +8,7 @@ PCD/
 logs/
 .DS_Store
 
-src/localization/FAST-LIVO2
 *.bag
-*.bag
+src/sensor_driver/ZhifangFu/
+dependent/Sophus/
+src/dependent/

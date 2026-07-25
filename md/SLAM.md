@@ -10,10 +10,10 @@
 | **定位 (基于 LiDAR)** | | | | | | |
 | **FAST_LIO_LOCALIZATION** | ✅ 内置 LIO | ✅ PCD | ✅ ICP | PCD | **4pro 已有** | LIO + ICP 一体化 |
 | ICP | — | — | ✅ | PCD | 有 scans.pcd | 无协方差，换 NDT |
-| **NDT** | — | — | ✅ | PCD | **P1：未集成** | 精度高，出协方差 |
+| **NDT** | — | — | ✅ | PCD | ✅ 已集成+导航 | 自动初始化，精度远超 AMCL |
 | AMCL | — | — | ✅ | PGM | 有 sand_table.pgm | 2D 降级 |
 | **slam_toolbox mapping** | — | ✅ PGM | ✅ | 无 | 当前在用 | 边建图边定 |
-| slam_toolbox localization | — | — | ✅ | .posegraph+.pgm | 需先 mapping | 依赖长 |
+| slam_toolbox localization | — | — | ✅ | .posegraph+.pgm | ✅ 已跑通 | 需先 mapping 存 posegraph |
 | **视觉** | | | | | | |
 | ORB-SLAM3 | ✅ 视觉+IMU | ✅ KeyFrame+MapPoint (.osa) | ✅ Localization | 稀疏地图 | ✅ 已跑通 | 地图保存/加载正常，Stereo+IMU 可用 |
 | VINS-Mono | ✅ 视觉 | ✅ 位姿图+稀疏点 | — | — | 未集成 | 纯里程计 |
@@ -41,7 +41,7 @@ NDT 优先：把地图切成体素算高斯分布，当前点云匹配概率最�
 
 | 优先级 | 事项 | 理由 |
 |------|------|------|
-| **P1** | NDT 定位 | 现有 PCD 直接可用，出协方差，比 ICP 更稳 |
+| ~~P1~~ ✅ | NDT 定位 | 已完成，全链路跑通，自动初始化，精度远超 AMCL |
 | P2 | Point_LIO | 高速机动时用，日常不必要 |
 
 ## FAST_LIO 系列对比

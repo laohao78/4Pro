@@ -26,6 +26,15 @@ python3 src/nav_bringup/scripts/pcd2pgm_node.py /tmp/uncompressed.pcd output z_m
 | `sand_table_z4065.pgm` | -0.40 | 0.65 | 宽范围，基本全量 |
 | `my_map.pgm` | — | — | slam_toolbox 在线建图 |
 | `my_map1.pgm` | — | — | slam_toolbox 在线建图 |
+| `0725.*` | -0.08 | 0.08 | **slam_toolbox 定位用**（.posegraph + .data + .pgm + .yaml） |
+
+## NDT 定位 PCD
+
+| 文件 | 大小 | 说明 |
+|------|------|------|
+| `../src/localization/ndt_localizer/map/scans.pcd` | 309MB | NDT 当前用 |
+| `../src/localization/FAST_LIO/myPCD/scans.pcd` | — | 完整原始 PCD |
+| `../src/localization/FAST_LIO/myPCD/scans-RGB-segmented2.pcd` | — | 沙盘分离 PCD（PGM 由此生成） |
 
 ## PGM 像素含义
 

@@ -11,15 +11,18 @@
   <arg name="output_diagnostics_topic" default="diagnostics" doc="Diagnostic topic" />
 
   <arg name="pcd_path" default="$(find ndt_localizer)/map/scans.pcd" doc="PCD地图路径" />
+  <arg name="rviz" default="true"/>
 
-  <include file="$(find ndt_localizer)/launch/static_tf.launch" />
+  <!-- static_tf 的 map→world 不需要，TF 由外部 launch 管理 -->
+  <!-- <include file="$(find ndt_localizer)/launch/static_tf.launch" /> -->
   <include file="$(find ndt_localizer)/launch/map_loader.launch">
     <arg name="pcd_path" value="$(arg pcd_path)" />
+    <arg name="rviz" value="$(arg rviz)"/>
   </include>
   <include file="$(find ndt_localizer)/launch/points_downsample.launch" />
 
   <!-- tf -->
-  <arg name="base_frame" default="base_link" doc="Vehicle reference frame" />
+  <arg name="base_frame" default="livox_frame" doc="NDT matching frame (matches /cloud_registered_body)" />
 
   <arg name="trans_epsilon" default="0.00001" doc="The maximum difference between two consecutive transformations in order to consider convergence" />
   <arg name="step_size" default="0.1" doc="The newton line search maximum step length" />
@@ -43,6 +46,10 @@
     <param name="converged_param_transform_probability" value="$(arg converged_param_transform_probability)" />
   </node>
 
-  <include file="$(find ndt_localizer)/launch/lexus.launch" />
+  <!-- lexus URDF 不需要，TF 由 ndt_odom_bridge + 静态 TF 统一管理 -->
+  <!-- <include file="$(find ndt_localizer)/launch/lexus.launch" /> -->
+
+  <!-- NDT map→livox_frame + FAST_LIO odom→livox_frame → TF map→odom -->
+  <node pkg="ndt_localizer" type="ndt_odom_bridge.py" name="ndt_odom_bridge" output="screen"/>
 
 </launch>

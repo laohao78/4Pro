@@ -1,0 +1,53 @@
+<launch>
+<!-- FAST-LIVO2: MID360 LiDAR + D435i Camera + sync_node 软同步 -->
+
+	<arg name="rviz" default="true" />
+
+	<!-- ===== Livox MID360 雷达驱动 ===== -->
+	<include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch"/>
+
+	<!-- ===== D435i 相机驱动 ===== -->
+	<include file="$(find realsense2_camera)/launch/rs_camera.launch">
+		<arg name="enable_color"    value="true"/>
+		<arg name="enable_depth"    value="false"/>
+		<arg name="enable_infra1"   value="false"/>
+		<arg name="enable_infra2"   value="false"/>
+		<arg name="enable_gyro"     value="true"/>
+		<arg name="enable_accel"    value="true"/>
+		<arg name="color_width"     value="640"/>
+		<arg name="color_height"    value="480"/>
+		<arg name="color_fps"       value="30"/>
+		<arg name="gyro_fps"        value="200"/>
+		<arg name="accel_fps"       value="200"/>
+		<arg name="enable_sync"     value="false"/>
+		<arg name="unite_imu_method" value="linear_interpolation"/>
+	</include>
+
+	<!-- ===== sync_node: 软同步 LiDAR + Camera ===== -->
+	<node name="sync_node" pkg="livox_ros_driver2" type="sync_node" output="screen">
+		<param name="image_topic" value="/camera/color/image_raw"/>
+		<param name="lidar_topic" value="/livox/lidar"/>
+		<param name="synced_image_topic" value="/synced_image"/>
+		<param name="synced_lidar_topic" value="/synced_lidar"/>
+		<param name="publish_rate" value="10.0"/>
+	</node>
+
+	<!-- ===== TF 静态偏移 ===== -->
+	<node pkg="tf" type="static_transform_publisher" name="tf_livox_to_base"
+	      args="0.13 0 -0.15 0 0 0 livox_frame base_link 100"/>
+	<node pkg="tf" type="static_transform_publisher" name="tf_base_to_footprint"
+	      args="0 0 -0.03 0 0 0 base_link base_footprint 100"/>
+
+	<!-- ===== FAST-LIVO2 里程计 (订阅 synced 话题) ===== -->
+	<rosparam command="load" file="$(find fast_livo)/config/mid360_d435i.yaml" />
+
+	<node pkg="fast_livo" type="fastlivo_mapping" name="laserMapping" output="screen">
+		<rosparam file="$(find fast_livo)/config/camera_d435i.yaml" />
+	</node>
+
+	<!-- ===== RViz ===== -->
+	<group if="$(arg rviz)">
+		<node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find fast_livo)/rviz_cfg/fast_livo2.rviz" />
+	</group>
+
+</launch>

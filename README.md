@@ -12,13 +12,17 @@ FAST_LIO/
 │   ├── 导航搭建流程.md
 │   ├── mid360.md
 │   ├── d435i.md
-│   ├── fast-lio.md
+│   ├── 传感器同步与不同里程计的初始化.md
 │   ├── TF架构.md
 │   ├── SLAM.md
 │   ├── 全局与局部规划器.md
 │   ├── 怎么得到栅格地图.md
 │   └── 导航踩坑记录.md
+├── map/
+│   └── README.md         ← PGM 地图文件清单
 └── src/localization/
+    ├── FAST_LIO/mainuse.md
+    ├── ndt_localizer/mainuse.md
     ├── ORB_SLAM3/mainuse.md
     └── VINS-Fusion/mainuse.md
 ```
@@ -29,21 +33,30 @@ FAST_LIO/
 
 | 文件 | 内容 |
 |------|------|
-| [mainuse.md](mainuse.md) | 所有 launch 命令快速参考 |
-| [md/导航搭建流程.md](md/导航搭建流程.md) | 从零搭建导航的完整步骤 |
+| [mainuse.md](mainuse.md) | 所有 launch 命令（cheat sheet） |
 
 ### FAST-LIO / 导航
 
 | 文件 | 内容 |
 |------|------|
+| [md/导航搭建流程.md](md/导航搭建流程.md) | 从零搭建导航的完整步骤 |
+| [src/localization/FAST_LIO/mainuse.md](src/localization/FAST_LIO/mainuse.md) | FAST-LIO 原理、参数、TF 改动、时间同步、标定 |
 | [md/mid360.md](md/mid360.md) | Livox MID360 雷达驱动配置 |
-| [md/fast-lio.md](md/fast-lio.md) | FAST-LIO 原理、参数、TF 改动 |
+| [md/传感器同步与不同里程计的初始化.md](md/传感器同步与不同里程计的初始化.md) | 时间同步 + 各方案初始化对比 |
 | [md/TF架构.md](md/TF架构.md) | odom→livox_frame→base_link→base_footprint |
 | [md/SLAM.md](md/SLAM.md) | SLAM 方案对比表 |
 | [md/全局与局部规划器.md](md/全局与局部规划器.md) | TEB / DWA 原理与配置 |
 | [md/怎么得到栅格地图.md](md/怎么得到栅格地图.md) | PCD 离线转 PGM |
 | [md/d435i.md](md/d435i.md) | RealSense D435i 硬件与视觉 SLAM 调用方式 |
+| [md/ssh.md](md/ssh.md) | Jetson 远程连接方式汇总 |
 | [md/导航踩坑记录.md](md/导航踩坑记录.md) | 导航调试中遇到的问题与解决 |
+| [map/README.md](map/README.md) | PGM 栅格地图文件清单（v3/sand_table 等） |
+
+### LiDAR 定位
+
+| 文件 | 内容 |
+|------|------|
+| [src/localization/ndt_localizer/mainuse.md](src/localization/ndt_localizer/mainuse.md) | NDT 点云定位，自动初始化，精度远超 AMCL |
 
 ### 视觉 SLAM
 
@@ -85,10 +98,13 @@ map ──(slam/定位)──▶ odom ──(FAST_LIO)──▶ livox_frame
 
 静态 TF 已在各 launch 中通过 `static_transform_publisher` 定义。FAST_LIO 源码已改为直接输出 `odom → livox_frame`。
 
-## SLAM 方案
+## 定位 & SLAM 方案
 
-| 方案 | 类型 | 状态 |
-|------|------|:----:|
-| **FAST-LIO** | LiDAR+IMU 紧耦合 | ✅ 主力 |
-| **ORB-SLAM3** | 视觉+IMU，ORB 特征 | ✅ 已跑通 |
-| **VINS-Fusion** | 视觉+IMU 紧耦合 + 回环 | ✅ 标定+跑通 |
+| 方案 | 类型 | 定位 | 状态 |
+|------|------|:--:|:----:|
+| **FAST-LIO** | LiDAR+IMU 紧耦合 | — | ✅ 主力里程计 |
+| **NDT** | 点云匹配静态 PCD | ✅ 自动初始化 | ✅ 已集成导航 |
+| **slam_toolbox** | 激光 Karto SLAM | ✅ posegraph | ✅ 可存可载 |
+| **AMCL** | 粒子滤波 PGM | 需手动 2D Pose | ✅ 可用 |
+| **ORB-SLAM3** | 视觉+IMU，ORB 特征 | ✅ Localization | ✅ 已跑通 |
+| **VINS-Fusion** | 视觉+IMU 紧耦合 + 回环 | ✅ 回环 | ✅ 标定+跑通 |

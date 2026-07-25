@@ -7,6 +7,11 @@ transform_tolerance: 0.5
 # 地图
 map_topic: /map
 
+# 静态地图层 (由 AMCL/slam_toolbox/NDT 定位时启用)
+static_layer:
+  enabled: false
+  map_topic: /map
+
 # 障碍物层 (来自 /scan)
 obstacle_layer:
   enabled: true

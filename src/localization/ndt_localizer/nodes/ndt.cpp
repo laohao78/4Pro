@@ -221,8 +221,8 @@ void NdtLocalizer::callback_pointcloud(
     ndt_pose_pub_.publish(result_pose_stamped_msg);
   }
 
-  // publish tf(map frame to base frame)
-  publish_tf(map_frame_, base_frame_, result_pose_stamped_msg);
+  // TF 由 ndt_odom_bridge 统一管理，这里不再发布
+  // publish_tf(map_frame_, base_frame_, result_pose_stamped_msg);
 
   // publish aligned point cloud
   pcl::PointCloud<pcl::PointXYZ>::Ptr sensor_points_mapTF_ptr(new pcl::PointCloud<pcl::PointXYZ>);

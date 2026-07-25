@@ -37,6 +37,7 @@ if(ROS_EDITION STREQUAL "ROS1")
     sensor_msgs
     std_msgs
     message_generation
+    message_filters
     rosbag
     pcl_ros
   )
@@ -165,6 +166,19 @@ if(ROS_EDITION STREQUAL "ROS1")
     ${APR_LIBRARIES}
   )
 
+  # sync_node: best-effort LiDAR-Camera pairing (no timestamp matching)
+  add_executable(sync_node src/sync_node.cpp)
+  target_include_directories(sync_node
+    PUBLIC
+    ${catkin_INCLUDE_DIRS}
+    src
+  )
+  target_link_libraries(sync_node ${catkin_LIBRARIES} ${message_filters_LIBRARIES})
+  install(TARGETS sync_node
+    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  )
 
   #---------------------------------------------------------------------------------------
   # Install

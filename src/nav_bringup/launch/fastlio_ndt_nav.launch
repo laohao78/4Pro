@@ -1,0 +1,76 @@
+<launch>
+<!-- NDT 定位导航：雷达 + FAST_LIO + NDT + move_base + TEB + 底盘控制 -->
+
+    <arg name="rviz" default="false"/>
+
+    <!-- ===== 雷达驱动 ===== -->
+    <include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch"/>
+
+    <!-- ===== FAST_LIO 里程计 ===== -->
+    <include file="$(find fast_lio)/launch/mapping_mid360.launch">
+        <arg name="rviz" value="false"/>
+    </include>
+
+    <!-- ===== TF 树 ===== -->
+    <node pkg="tf" type="static_transform_publisher" name="tf_livox_to_base"
+          args="0.13 0 -0.15 0 0 0 livox_frame base_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="tf_base_to_footprint"
+          args="0 0 -0.03 0 0 0 base_link base_footprint 100"/>
+
+    <!-- ===== pointcloud_to_laserscan → /scan ===== -->
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pcd_to_scan">
+        <remap from="cloud_in" to="/cloud_registered_body"/>
+        <remap from="scan" to="/scan"/>
+        <param name="target_frame" value="livox_frame"/>
+        <param name="transform_tolerance" value="0.05"/>
+        <param name="min_height" value="-0.30"/>
+        <param name="max_height" value="0.06"/>
+        <param name="angle_min" value="-3.14159"/>
+        <param name="angle_max" value="3.13723"/>
+        <param name="angle_increment" value="0.0043633"/>
+        <param name="scan_time" value="0.1"/>
+        <param name="range_min" value="0.3"/>
+        <param name="range_max" value="10.0"/>
+    </node>
+
+    <!-- ===== map_server 加载栅格地图 ===== -->
+    <node pkg="map_server" type="map_server" name="map_server"
+          args="/home/orin/Desktop/00/FAST_LIO/map/0719/sand_table_v3_fixed1.yaml"/>
+
+    <!-- ===== NDT 定位（map→livox_frame + bridge→map→odom） ===== -->
+    <arg name="pcd_path" default="$(find ndt_localizer)/map/scans.pcd"/>
+    <include file="$(find ndt_localizer)/launch/ndt_localizer.launch">
+        <arg name="rviz" value="false"/>
+        <arg name="pcd_path" value="$(arg pcd_path)"/>
+    </include>
+
+    <!-- ===== move_base 导航 ===== -->
+    <node pkg="move_base" type="move_base" name="move_base" output="screen">
+        <rosparam file="$(find nav_bringup)/config/costmap_common.yaml" command="load" ns="global_costmap"/>
+        <rosparam file="$(find nav_bringup)/config/costmap_common.yaml" command="load" ns="local_costmap"/>
+        <rosparam param="global_costmap/static_layer/enabled" value="true"/>
+        <rosparam param="global_costmap/static_layer/map_topic" value="/map"/>
+        <rosparam file="$(find nav_bringup)/config/global_costmap.yaml" command="load"/>
+        <rosparam file="$(find nav_bringup)/config/local_costmap.yaml" command="load"/>
+        <rosparam file="$(find nav_bringup)/config/move_base.yaml" command="load"/>
+        <rosparam file="$(find nav_bringup)/config/teb_local_planner.yaml" command="load"/>
+    </node>
+
+    <!-- ===== cmd_vel → Ackermann 转换 ===== -->
+    <node pkg="nav_bringup" type="cmd_vel_to_ackermann.py" name="cmd_vel_converter" output="screen">
+        <param name="max_vel" value="0.3"/>
+        <param name="max_duty" value="0.20"/>
+        <param name="min_duty" value="0.07"/>
+        <param name="max_omega" value="3.0"/>
+        <param name="steer_gain" value="400"/>
+        <param name="timeout" value="1.0"/>
+    </node>
+
+    <!-- ===== 底盘控制 ===== -->
+    <node pkg="chasis_control" type="ROSPY_Orin_chasis_control_202406v1.py" name="Chasis_Control" required="true"/>
+
+    <!-- ===== RViz ===== -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find nav_bringup)/rviz/nav.rviz"
+          if="$(arg rviz)"/>
+
+</launch>

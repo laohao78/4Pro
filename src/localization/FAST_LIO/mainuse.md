@@ -82,13 +82,44 @@ roslaunch fast_lio mapping_mid360.launch
 
 | Topic | 类型 | 说明 |
 |-------|------|------|
-| `/cloud_registered` | PointCloud2 | 当前帧去畸变点云（world 系） |
-| `/cloud_registered_body` | PointCloud2 | 当前帧点云（base_link 系） |
+| `/cloud_registered` | PointCloud2 | 当前帧去畸变点云（odom 系） |
+| `/cloud_registered_body` | PointCloud2 | 当前帧点云（livox_frame 系） |
 | `/Laser_map` | PointCloud2 | 全局累积地图（ikd-Tree 展平） |
-| `/Odometry` | Odometry | 里程计（odom → base_link） |
+| `/Odometry` | Odometry | 里程计（odom → livox_frame） |
 | `/path` | Path | 轨迹路径（需 `path_en: true`） |
 
-CustomMsg 是驱动→FAST_LIO 内部格式，Foxglove 看 LIO 输出的 PointCloud2 话题即可。
+CustomMsg 是驱动→FAST_LIO 内部格式。
+
+### Foxglove 推荐配置（轻量，浏览器渲染）
+
+3D 面板：
+
+| Layer | Topic | 配置 |
+|-------|-------|------|
+| 当前帧 | `/cloud_registered` | RGB=Intensity, point size=3 |
+| 轨迹拖尾 | `/cloud_registered` | opacity=10%, decay=30s |
+| 全局地图 | `/Laser_map` | 颜色=红, point size=2 |
+
+其他面板：Pose → `/Odometry`，Path → `/path`。
+
+全局设置：Fixed Frame=`odom`，3D 面板右键 → Follow → 选 `livox_frame`（自动跟车）。
+
+### cloud_registered vs cloud_registered_body
+
+同一帧点云，坐标系不同：
+
+| Topic | frame_id | 说明 | 用途 |
+|-------|----------|------|------|
+| `/cloud_registered` | `odom` | 已乘当前位姿 T_odom_livox，投影到全局 odom 系 | Foxglove 可视化 |
+| `/cloud_registered_body` | `livox_frame` | 原始 LiDAR 视角，未乘位姿 | 转 /scan 给导航消费 |
+
+```
+同一帧点云
+    │
+    ├─→ 乘以 T_odom_livox → /cloud_registered (odom 系)
+    │
+    └─→ 不乘位姿 → /cloud_registered_body (livox_frame 系)
+```
 
 ### /Odometry 详解
 
@@ -137,11 +168,33 @@ rostopic type /livox/lidar
 
 ### 建图漂移
 
-1. 启动后**原地静止 2-3 秒**
+1. 启动后**原地静止 2-3 秒**（IMU 初始化）
 2. 检查外参（`extrinsic_T` / `extrinsic_R`）
 3. 检查时间同步（`time_sync_en` / `time_offset_lidar_to_imu`）
 
-### 编译报错
+### RViz Fixed Frame 不对
+
+旧 RViz 配置 `rviz_cfg/loam_livox.rviz` 的 Fixed Frame 是 `camera_init`，已改为 `odom`。
+
+### RViz 看不到点云
+
+`rostopic type /livox/lidar` 必须是 `livox_ros_driver2/CustomMsg`（`xfer_format=1`）。
+
+## 6. 时间同步
+
+Mid360 的 LiDAR 和 IMU 共用同一硬件时钟，天然同步。实测 IMU 消息比 LiDAR 帧头晚 ~160ms（正常，逐点时间戳已对齐），`time_offset_lidar_to_imu: 0.0` 即可。
+
+## 7. 标定
+
+**不需要**。FAST_LIO2 直接法对外参不敏感，跟 VINS-Fusion 不同：
+
+| | FAST_LIO | VINS-Fusion |
+|------|-----------|-------------|
+| 需要标定？ | 否 | 必须（IMU-相机外参） |
+| 外参 | LiDAR→IMU（同壳体，接近单位阵） | IMU→相机（视觉重投影敏感） |
+| 在线优化 | `extrinsic_est_en: false` 即可 | `estimate_extrinsic: 0` 信任固件 |
+
+## 编译报错
 
 | 错误 | 解决 |
 |------|------|

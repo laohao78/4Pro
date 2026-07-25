@@ -2,7 +2,7 @@
 <!-- slam_toolbox 已知地图导航：FAST_LIO + slam_toolbox localization + TEB + 控制 -->
 
     <arg name="rviz" default="false"/>
-    <arg name="map_name" default="my_map"/>  <!-- .posegraph + .pgm 的文件名前缀 -->
+    <arg name="map_name" default="0725"/>  <!-- .posegraph + .pgm 的文件名前缀 -->
 
     <!-- 雷达 -->
     <include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch"/>
@@ -34,21 +34,16 @@
 
     <!-- slam_toolbox 定位模式 -->
     <node pkg="slam_toolbox" type="localization_slam_toolbox_node" name="slam_toolbox" output="screen">
-        <rosparam>
-            mode: localization
-            odom_frame: odom
-            map_frame: map
-            base_frame: base_footprint
-            scan_topic: /scan
-            map_file_name: $(find nav_bringup)/../map/$(arg map_name)
-            map_start_pose: [0.0, 0.0, 0.0]
-        </rosparam>
+        <rosparam command="load" file="$(find nav_bringup)/config/slam_toolbox_localization.yaml"/>
+        <param name="map_file_name" value="/home/orin/Desktop/00/FAST_LIO/map/$(arg map_name)"/>
     </node>
 
     <!-- move_base -->
     <node pkg="move_base" type="move_base" name="move_base" output="screen">
         <rosparam file="$(find nav_bringup)/config/costmap_common.yaml" command="load" ns="global_costmap"/>
         <rosparam file="$(find nav_bringup)/config/costmap_common.yaml" command="load" ns="local_costmap"/>
+        <rosparam param="global_costmap/static_layer/enabled" value="true"/>
+        <rosparam param="global_costmap/static_layer/map_topic" value="/map"/>
         <rosparam file="$(find nav_bringup)/config/global_costmap.yaml" command="load"/>
         <rosparam file="$(find nav_bringup)/config/local_costmap.yaml" command="load"/>
         <rosparam file="$(find nav_bringup)/config/move_base.yaml" command="load"/>
