@@ -36,6 +36,12 @@ roslaunch nav_bringup fastlio_slamtoolbox_nav.launch rviz:=true
 roslaunch nav_bringup fastlio_amcl_nav.launch rviz:=true
 ```
 
+### ICP 定位导航
+
+```sh
+roslaunch nav_bringup fastlio_icp_nav.launch rviz:=true
+```
+
 ### NDT 定位导航（推荐）
 
 ```sh

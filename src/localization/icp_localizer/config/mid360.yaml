@@ -1,0 +1,13 @@
+map_frame_id: "map"
+odom_frame_id: "odom"
+range_odom_frame_id: "odom"
+laser_frame_id: "livox_frame"
+pointcloud_topic: "/cloud_registered_body"
+pcd_path: "/home/orin/Desktop/00/FAST_LIO/src/localization/FAST_LIO/myPCD/scans.pcd"
+thresh: 0.15
+rough_leaf_size: 0.4
+refine_leaf_size: 0.1
+xy_offset: 2.0
+yaw_offset: 180.0
+yaw_resolution: 30.0
+initial_pose: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]

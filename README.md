@@ -105,6 +105,20 @@ map ──(slam/定位)──▶ odom ──(FAST_LIO)──▶ livox_frame
 | **FAST-LIO** | LiDAR+IMU 紧耦合 | — | ✅ 主力里程计 |
 | **NDT** | 点云匹配静态 PCD | ✅ 自动初始化 | ✅ 已集成导航 |
 | **slam_toolbox** | 激光 Karto SLAM | ✅ posegraph | ✅ 可存可载 |
+| **ICP** | 点面多假设 ICP | 需手动 2D Pose | ✅ 已集成导航 |
 | **AMCL** | 粒子滤波 PGM | 需手动 2D Pose | ✅ 可用 |
 | **ORB-SLAM3** | 视觉+IMU，ORB 特征 | ✅ Localization | ✅ 已跑通 |
 | **VINS-Fusion** | 视觉+IMU 紧耦合 + 回环 | ✅ 回环 | ✅ 标定+跑通 |
+
+### 待完成
+
+| 方案 | 说明 |
+|------|------|
+| **Point_LIO** | 逐点卡尔曼，100Hz，高速机动用 |
+| **FAST-LIVO2** | LiDAR+Camera+IMU 紧耦合，需外参标定 |
+
+### 已评估未集成
+
+| 方案 | 说明 |
+|------|------|
+| **FAST_LIO_LOCALIZATION**（4pro） | LIO + ICP 一体化，Python Open3D，不如 NDT/ICP 已覆盖 |
