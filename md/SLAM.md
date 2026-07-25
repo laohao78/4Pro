@@ -9,7 +9,7 @@
 | Point_LIO | ✅ ~100Hz | ✅ PCD | — | — | 未集成 | 逐点更新，输入同受 LiDAR 帧率限制 |
 | **定位 (基于 LiDAR)** | | | | | | |
 | **FAST_LIO_LOCALIZATION** | ✅ 内置 LIO | ✅ PCD | ✅ ICP | PCD | **4pro 已有** | LIO + ICP 一体化 |
-| ICP | — | — | ✅ | PCD | 有 scans.pcd | 无协方差，换 NDT |
+| **ICP (icp_localizer)** | — | — | ✅ | PCD | ✅ 已集成+导航 | 多假设+点面ICP（pb_rm ROS2移植） |
 | **NDT** | — | — | ✅ | PCD | ✅ 已集成+导航 | 自动初始化，精度远超 AMCL |
 | AMCL | — | — | ✅ | PGM | 有 sand_table.pgm | 2D 降级 |
 | **slam_toolbox mapping** | — | ✅ PGM | ✅ | 无 | 当前在用 | 边建图边定 |
@@ -21,7 +21,7 @@
 
 - slam_toolbox 不产生里程计，它依赖外部里程计（如 FAST_LIO）提供 odom→base，再用 /scan 修正 map→odom
 - ORB_SLAM3 稀疏地图 = 几百个 KeyFrame（图像+位姿）+ 几千个 MapPoint（3D 点 + ORB 描述子），大小几十 MB
-- ICP/NDT 包都已就绪：`FAST_LIO_LOCALIZATION`（4pro）+ `ndt_localizer`（00/FAST_LIO），NDT 优先
+- 三个 PCD 定位包都已就绪：`icp_localizer` + `ndt_localizer` + `FAST_LIO_LOCALIZATION`（4pro），NDT 优先
 
 ### ICP vs NDT
 
@@ -33,9 +33,23 @@
 | 协方差 | ❌ | ✅ (Hessian 逆) |
 | 速度 | 快 | 稍慢（建网格开销） |
 | 适用 | 结构清晰场景 | 噪声/遮挡场景 |
-| 你的包 | `FAST_LIO_LOCALIZATION` (4pro) | `ndt_localizer` (00/FAST_LIO) |
+| 你的包 | `icp_localizer` (00/FAST_LIO) | `ndt_localizer` (00/FAST_LIO) |
 
-NDT 优先：把地图切成体素算高斯分布，当前点云匹配概率最高处，比 ICP 抓最近点更鲁棒，且协方差直接可用。
+NDT 优先：自动初始化 + 更快更鲁棒。ICP 备选。
+
+### 两个 ICP 方案对比
+
+| | icp_localizer（已集成） | FAST_LIO_LOCALIZATION（4pro，不集成） |
+|------|------|------|
+| 语言 | C++ (PCL) | Python (Open3D) |
+| ICP 类型 | **点面** + 法向量 | 简单点对点 |
+| 多假设搜索 | ✅ 网格 9×N | ❌ |
+| 两级精炼 | ✅ rough+refine | ❌ |
+| 初值 | 网格自动搜 | 必需给准 |
+| 速度 | 快 | 慢 |
+| 来源 | pb_rm ROS2 移植 | 4pro 原始方案 |
+
+4pro 版用 Python Open3D 跑简单点对点 ICP，没有多假设也没有两级精炼，初值差一点就跑飞。我们已用 C++ PCL 重写，完全覆盖。
 
 ## 优先级
 
