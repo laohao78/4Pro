@@ -9,7 +9,6 @@ logs/
 .DS_Store
 
 *.bag
-src/sensor_driver/ZhifangFu/
 dependent/Sophus/
 src/dependent/
 *.pcd

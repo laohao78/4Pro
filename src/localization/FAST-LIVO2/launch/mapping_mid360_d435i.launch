@@ -24,7 +24,7 @@
 	</include>
 
 	<!-- ===== sync_node: 软同步 LiDAR + Camera ===== -->
-	<node name="sync_node" pkg="livox_ros_driver2" type="sync_node" output="screen">
+	<node name="sync_node" pkg="livox_camera_sync" type="sync_node" output="screen">
 		<param name="image_topic" value="/camera/color/image_raw"/>
 		<param name="lidar_topic" value="/livox/lidar"/>
 		<param name="synced_image_topic" value="/synced_image"/>
@@ -39,10 +39,8 @@
 	      args="0 0 -0.03 0 0 0 base_link base_footprint 100"/>
 
 	<!-- ===== FAST-LIVO2 里程计 (订阅 synced 话题) ===== -->
-	<rosparam command="load" file="$(find fast_livo)/config/mid360_d435i.yaml" />
-
 	<node pkg="fast_livo" type="fastlivo_mapping" name="laserMapping" output="screen">
-		<rosparam file="$(find fast_livo)/config/camera_d435i.yaml" />
+		<rosparam file="$(find fast_livo)/config/mid360_d435i.yaml" />
 	</node>
 
 	<!-- ===== RViz ===== -->

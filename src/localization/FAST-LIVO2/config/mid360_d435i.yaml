@@ -7,7 +7,7 @@ common:
   ros_driver_bug_fix: false
 
 extrin_calib:
-  extrinsic_T: [0.04412, -0.02329, -0.011]   # IMU -> LiDAR translation (from mid360 config)
+  extrinsic_T: [-0.011, -0.02329, 0.04412]   # IMU -> LiDAR translation (Livox Mid360 出厂标定，与 FAST_LIO 一致)
   extrinsic_R: [1, 0, 0, 0, 1, 0, 0, 0, 1]   # IMU -> LiDAR rotation (identity, same IMU)
   Rcl: [0, -1, 0,                             # LiDAR -> Camera rotation (placeholder, 需 FAST-Calib 标定)
         -1, 0, 0,
@@ -86,3 +86,18 @@ pcd_save:
 image_save:
   img_save_en: false
   interval: 1
+
+# ---- D435i RGB 相机内参 (vikit loadFromRosNs 读 /laserMapping/cam_*) ----
+# 固件真值, 640x480@30Hz Color
+cam_model: Pinhole
+cam_width: 640
+cam_height: 480
+scale: 0.5                  # 实际处理分辨率 = 320x240
+cam_fx: 612.43
+cam_fy: 611.03
+cam_cx: 327.04
+cam_cy: 252.74
+cam_d0: 0.0
+cam_d1: 0.0
+cam_d2: 0.0
+cam_d3: 0.0

@@ -96,6 +96,30 @@ extrin_calib:
 
 ---
 
+## B站复现经验
+
+来源：[ZhifangFu](https://github.com/ZhifangFu/livox_ros_driver2) 的 B站视频评论区
+
+### 1. 硬件
+
+手持式装置：Mid360 + D435i + Orin NX。
+
+> **不要买 D435i**——D435i 无法硬件同步，建议选支持硬触发曝光的相机。
+
+### 2. 软同步驱动
+
+用 [ZhifangFu/livox_ros_driver2](https://github.com/ZhifangFu/livox_ros_driver2) **代替 Livox 官方驱动**。这个包里自带 `sync_node`，运行后会同步相机和雷达话题（→ `/synced_image`、`/synced_lidar`）。
+
+### 3. OpenCV 版本
+
+报错 `process has died` 大概率是 OpenCV 版本太高，**换成 4.2.0**。
+
+### 4. 效果糊 ≈ 没有硬同步
+
+已排除标定原因，最终判断是软同步的锅——LiDAR 点和图像不是同一时刻采集的，投影像素有偏差，导致光度误差项不可靠，重建发糊。
+
+---
+
 ## 工作流程
 
 ```sh

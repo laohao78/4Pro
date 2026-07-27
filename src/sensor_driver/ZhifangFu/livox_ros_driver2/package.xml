@@ -1,0 +1,14 @@
+<package format="2">
+  <name>livox_camera_sync</name>
+  <version>0.0.1</version>
+  <description>Soft-sync LiDAR and Camera using message_filters::ApproximateTime. Forked from ZhifangFu/livox_ros_driver2, stripped to sync_node only.</description>
+  <maintainer email="user@example.com">user</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>message_filters</depend>
+  <depend>livox_ros_driver2</depend>
+</package>
