@@ -9,8 +9,8 @@ distortion_parameters:
    k2: 0.0
    p1: 0.0
    p2: 0.0
-projection_parameters:
-   fx: 385.7544860839844
-   fy: 385.7544860839844
-   cx: 323.1204833984375
-   cy: 236.7432098388672
+projection_parameters:          # 从 D435i 固件读取 (640x480@30Hz Infrared)
+   fx: 385.524
+   fy: 385.524
+   cx: 318.486
+   cy: 238.451

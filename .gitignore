@@ -14,3 +14,4 @@ dependent/Sophus/
 src/dependent/
 *.pcd
 .catkin_tools/
+src/localization/VINS-Fusion/support_files/brief_k10L6.bin

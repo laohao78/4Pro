@@ -1,5 +1,11 @@
 # VINS-Fusion 踩坑记录
 
+## 0. 当前状态 ✅
+
+已完成完整标定（IMU 噪声 + 固件外参 + 固件内参），启动时序优化，BRIEF 词汇已恢复，效果比以前好多了。
+
+---
+
 ## 1. 编译错误：OpenCV 4.x API 不兼容
 
 D435i + JetPack 5.x 自带 OpenCV 4.x，VINS-Fusion 源码大量使用 OpenCV 3.x 的 C 风格常量。

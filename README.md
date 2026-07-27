@@ -12,7 +12,7 @@ FAST_LIO/
 │   ├── 导航搭建流程.md
 │   ├── mid360.md
 │   ├── d435i.md
-│   ├── 传感器同步与不同里程计的初始化.md
+│   ├── 标定-同步-初始化.md
 │   ├── TF架构.md
 │   ├── SLAM.md
 │   ├── 全局与局部规划器.md
@@ -42,7 +42,7 @@ FAST_LIO/
 | [md/导航搭建流程.md](md/导航搭建流程.md) | 从零搭建导航的完整步骤 |
 | [src/localization/FAST_LIO/mainuse.md](src/localization/FAST_LIO/mainuse.md) | FAST-LIO 原理、参数、TF 改动、时间同步、标定 |
 | [md/mid360.md](md/mid360.md) | Livox MID360 雷达驱动配置 |
-| [md/传感器同步与不同里程计的初始化.md](md/传感器同步与不同里程计的初始化.md) | 时间同步 + 各方案初始化对比 |
+| [md/标定-同步-初始化.md](md/标定-同步-初始化.md) | 标定哪些需要/不需要 + 时间同步 + 各方案初始化对比 |
 | [md/TF架构.md](md/TF架构.md) | odom→livox_frame→base_link→base_footprint |
 | [md/SLAM.md](md/SLAM.md) | SLAM 方案对比表 |
 | [md/全局与局部规划器.md](md/全局与局部规划器.md) | TEB / DWA 原理与配置 |
