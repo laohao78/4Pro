@@ -1,0 +1,33 @@
+# Camera intrinsics — D435i RGB 640x480@30Hz (固件真值)
+  fx: 612.43
+  fy: 611.03
+  cx: 327.04
+  cy: 252.74
+  k1: 0.0
+  k2: 0.0
+  p1: 0.0
+  p2: 0.0
+
+# Calibration target parameters (0.5x scale 标定板)
+  marker_size: 0.10
+  delta_width_qr_center: 0.275
+  delta_height_qr_center: 0.175
+  delta_width_circles: 0.25
+  delta_height_circles: 0.2
+  circle_radius: 0.06
+
+# Distance filter (scene3)
+  x_min: 1.7
+  x_max: 2.5
+  y_min: -0.3
+  y_max: 0.7
+  z_min: -0.1
+  z_max: 0.8
+
+# Input — 先跑 scene1
+  lidar_topic: "/livox/lidar"
+  bag_path: "$(find fast_calib)/calib_data/scene3.bag"
+  image_path: "$(find fast_calib)/calib_data/scene3.jpg"
+
+# Output
+  output_path: "$(find fast_calib)/output"

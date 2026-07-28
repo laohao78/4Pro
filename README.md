@@ -22,6 +22,8 @@ FAST_LIO/
 │   └── README.md         ← PGM 地图文件清单
 └── src/localization/
     ├── FAST_LIO/mainuse.md
+    ├── FAST-LIVO2/mainuse.md
+    ├── FAST-Calib/mainuse.md
     ├── ndt_localizer/mainuse.md
     ├── ORB_SLAM3/mainuse.md
     └── VINS-Fusion/mainuse.md
@@ -64,6 +66,13 @@ FAST_LIO/
 |------|------|
 | [src/localization/ORB_SLAM3/mainuse.md](src/localization/ORB_SLAM3/mainuse.md) | 编译、YAML 配置、地图保存/加载、已修复 bug |
 | [src/localization/VINS-Fusion/mainuse.md](src/localization/VINS-Fusion/mainuse.md) | OpenCV 兼容、IMU 标定、回环、外参读取 |
+
+### 视觉-LiDAR 融合 / 标定
+
+| 文件 | 内容 |
+|------|------|
+| [src/localization/FAST-LIVO2/mainuse.md](src/localization/FAST-LIVO2/mainuse.md) | FAST-LIVO2 复现、编译修复、B站经验、软同步驱动拆分 |
+| [src/dependent/FAST-Calib/mainuse.md](src/dependent/FAST-Calib/mainuse.md) | LiDAR-Camera 外参标定：录制 → 选点 → 单场景 → 多场景联合 |
 
 ## 硬件
 
@@ -115,7 +124,7 @@ map ──(slam/定位)──▶ odom ──(FAST_LIO)──▶ livox_frame
 | 方案 | 说明 |
 |------|------|
 | **Point_LIO** | 逐点卡尔曼，100Hz，高速机动用 |
-| **FAST-LIVO2** | LiDAR+Camera+IMU 紧耦合，需外参标定 |
+| **FAST-LIVO2** | LiDAR+视觉+IMU 紧耦合 | ✅ FAST-Calib 外参 | ✅ 标定完成，待上机 |
 
 ### 已评估未集成
 

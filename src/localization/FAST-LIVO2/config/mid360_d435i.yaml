@@ -9,10 +9,10 @@ common:
 extrin_calib:
   extrinsic_T: [-0.011, -0.02329, 0.04412]   # IMU -> LiDAR translation (Livox Mid360 出厂标定，与 FAST_LIO 一致)
   extrinsic_R: [1, 0, 0, 0, 1, 0, 0, 0, 1]   # IMU -> LiDAR rotation (identity, same IMU)
-  Rcl: [0, -1, 0,                             # LiDAR -> Camera rotation (placeholder, 需 FAST-Calib 标定)
-        -1, 0, 0,
-        0, 0, -1]
-  Pcl: [0.13, 0.0, -0.05]                     # LiDAR -> Camera translation (placeholder, 需 FAST-Calib 标定)
+  Rcl: [-0.103501, -0.994620, -0.004300,     # LiDAR -> Camera rotation (FAST-Calib multi-scene, RMSE 6.7mm)
+        -0.028254, 0.007261, -0.999574,
+         0.994228, -0.103336, -0.028854]
+  Pcl: [0.072124, -0.024821, -0.201867]       # LiDAR -> Camera translation (FAST-Calib multi-scene)
 
 time_offset:
   imu_time_offset: 0.0

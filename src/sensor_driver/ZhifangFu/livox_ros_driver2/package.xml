@@ -9,6 +9,5 @@
 
   <depend>roscpp</depend>
   <depend>sensor_msgs</depend>
-  <depend>message_filters</depend>
   <depend>livox_ros_driver2</depend>
 </package>

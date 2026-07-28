@@ -4,7 +4,6 @@ project(livox_camera_sync)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
-  message_filters
   livox_ros_driver2
 )
 
