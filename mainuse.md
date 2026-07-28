@@ -88,14 +88,14 @@ roslaunch vins vins_realsense_stereo_imu.launch rviz:=true
 
 ---
 
-## 4.FAST-LIVO2
+## 4. FAST-LIVO2
 
-LiDAR+IMU+视觉紧耦合里程计，MID360 + D435i。
+LiDAR+视觉+IMU 紧耦合里程计，MID360 + D435i。**已标定跑通**。
 
 详见：[src/localization/FAST-LIVO2/mainuse.md](src/localization/FAST-LIVO2/mainuse.md)
+标定：[src/dependent/FAST-Calib/mainuse.md](src/dependent/FAST-Calib/mainuse.md)
 
 ```sh
+# 一键启动（驱动+sync+FAST-LIVO2+RViz）
 roslaunch fast_livo mapping_mid360_d435i.launch rviz:=true
 ```
-
-> **注意**：LiDAR-Camera 外参需用 [FAST-Calib](https://github.com/hku-mars/FAST-Calib) 标定。

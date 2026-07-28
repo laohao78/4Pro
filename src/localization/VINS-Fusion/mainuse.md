@@ -4,6 +4,8 @@
 
 已完成完整标定（IMU 噪声 + 固件外参 + 固件内参），启动时序优化，BRIEF 词汇已恢复，效果比以前好多了。
 
+> **替代方案**：如需 LiDAR+视觉+IMU 融合，见 [FAST-LIVO2](../FAST-LIVO2/mainuse.md)，已标定跑通。VINS-Fusion 为纯视觉-惯性方案，无 LiDAR 参与。
+
 ---
 
 ## 1. 编译错误：OpenCV 4.x API 不兼容

@@ -118,13 +118,13 @@ map ──(slam/定位)──▶ odom ──(FAST_LIO)──▶ livox_frame
 | **AMCL** | 粒子滤波 PGM | 需手动 2D Pose | ✅ 可用 |
 | **ORB-SLAM3** | 视觉+IMU，ORB 特征 | ✅ Localization | ✅ 已跑通 |
 | **VINS-Fusion** | 视觉+IMU 紧耦合 + 回环 | ✅ 回环 | ✅ 标定+跑通 |
+| **FAST-LIVO2** | LiDAR+视觉+IMU 紧耦合 | ✅ 标定+跑通 | 3 场景联合 RMSE 6.7mm |
 
 ### 待完成
 
 | 方案 | 说明 |
 |------|------|
 | **Point_LIO** | 逐点卡尔曼，100Hz，高速机动用 |
-| **FAST-LIVO2** | LiDAR+视觉+IMU 紧耦合 | ✅ FAST-Calib 外参 | ✅ 标定完成，待上机 |
 
 ### 已评估未集成
 

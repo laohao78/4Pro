@@ -186,13 +186,15 @@ Mid360 的 LiDAR 和 IMU 共用同一硬件时钟，天然同步。实测 IMU �
 
 ## 7. 标定
 
-**不需要**。FAST_LIO2 直接法对外参不敏感，跟 VINS-Fusion 不同：
+**不需要**。FAST_LIO2 直接法对外参不敏感。
 
-| | FAST_LIO | VINS-Fusion |
-|------|-----------|-------------|
-| 需要标定？ | 否 | 必须（IMU-相机外参） |
-| 外参 | LiDAR→IMU（同壳体，接近单位阵） | IMU→相机（视觉重投影敏感） |
-| 在线优化 | `extrinsic_est_en: false` 即可 | `estimate_extrinsic: 0` 信任固件 |
+| | FAST_LIO | VINS-Fusion | **FAST-LIVO2** |
+|------|-----------|-------------|------|
+| 需要标定？ | 否 | 必须（IMU-相机外参） | **是（LiDAR-Camera外参）** |
+| 外参 | LiDAR→IMU（同壳体） | IMU→相机（视觉重投影敏感） | **LiDAR→RGB相机（光度误差敏感）** |
+| 状态 | 出厂即可 | 固件读取 | **✅ FAST-Calib, RMSE 6.7mm** |
+
+详见 [FAST-Calib/mainuse.md](../../dependent/FAST-Calib/mainuse.md)。
 
 ## 编译报错
 
